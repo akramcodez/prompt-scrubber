@@ -1,0 +1,39 @@
+# Architecture: prompt-scrub
+
+## High-Level Structure
+
+```text
+prompt-scrub
+├── src/
+│   ├── detectors/
+│   │   ├── email.ts
+│   │   ├── phone.ts
+│   │   ├── path.ts
+│   │   ├── secret.ts
+│   │   └── url.ts
+│   │
+│   ├── session/
+│   │   ├── session-manager.ts
+│   │   └── storage.ts
+│   │
+│   ├── core/
+│   │   ├── scrub.ts
+│   │   ├── rehydrate.ts
+│   │   └── collision-resolver.ts
+│   │
+│   ├── cli/
+│   │   └── commands/
+│   │
+│   └── types/
+```
+
+## Core Components
+
+- **Detectors (`src/detectors/`)**: Pluggable modules responsible for finding identifying information (emails, paths, secrets, etc.) in text and returning standard `Finding` objects.
+- **Session Management (`src/session/`)**: Handles creating, loading, and saving session maps to disk (JSON format). Ensures that identifiers remain consistently mapped across a session.
+- **Core Pipeline (`src/core/`)**:
+  - `scrub.ts`: Orchestrates the detection process, resolves collisions, applies replacements, and updates the session map.
+  - `rehydrate.ts`: The reverse process; swaps placeholders back to their original values using the session map.
+  - `collision-resolver.ts`: Logic to handle overlapping findings from different detectors (the more specific detector wins).
+- **CLI (`src/cli/`)**: Command-line interface wrapping the core library. Exposes commands like `scrub`, `rehydrate`, `inspect`, and session management.
+- **Types (`src/types/`)**: Shared TypeScript interfaces (e.g., `Message`, `Finding`, `SessionMap`).
