@@ -9,10 +9,12 @@ Reads a message from `stdin` and prints the scrubbed message to `stdout`. The se
 
 **Options:**
 - `--session-id <id>`: Reuse an existing session map. If omitted, a new UUID is generated.
-- `--inspect`: Dry run. Prints a diff of what would change without committing the transformation or updating the session map.
 
 ### `prompt-scrub rehydrate`
 Reads a scrubbed response from `stdin` and prints the rehydrated response to `stdout`.
+
+**Warnings (stderr):**
+If the model hallucinates a placeholder that does not exist in the session map (e.g., the model outputs `Secret_2` but only `Secret_1` was scrubbed), the tool passes the string through unchanged to `stdout`, but emits a warning directly to `stderr`.
 
 **Options:**
 - `--session-id <id>` (Required): The session ID used during the `scrub` phase to restore original values.

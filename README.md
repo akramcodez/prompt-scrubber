@@ -10,24 +10,23 @@ Read the full whitepaper at [docs.nanocollective.org](https://docs.nanocollectiv
 - **Local-first**: It runs entirely on the user's hardware. V1 requires zero network access.
 - **Open for all**: Full source open, pluggable rule packs, trivial deployment. Anyone can install, audit, and extend it.
 
-## Threat Model
+## Threat Model: What `prompt-scrub` Is and Isn't
 
-`prompt-scrub` operates exclusively at the content layer. It modifies the text you send, not how you send it.
+`prompt-scrub` is a 70% solution, not a 100% solution. It does **not** provide complete anonymity.
 
-### In Scope
-- **Accidental secret leakage in prompts**: Strong defense. Catches common API keys, tokens, and credentials.
-- **Accidental identifier leakage in one-off prompts**: Strong defense. Strips emails, phone numbers, postal addresses, paths, and URLs.
+It is critical that users understand what the tool defends against (accidental secrets and identifiers), what it partially mitigates (provider profile building), and what is explicitly out of scope (style fingerprinting, network-level identification, local adversaries).
 
-### Partial Defense
-- **Long-term provider profile building**: Stable session mappings prevent correlation across a single session, but stylistic fingerprinting can still allow an LLM provider to build a profile across sessions.
-- **Cloud LLM providers reading identifiers**: Detectors reduce visibility significantly but not to zero (e.g., `Path_1` vs `/Users/me`).
-- **Tool call results in agentic settings**: It scrubs results from commands like `ls` and `git log` before the next turn, but coverage is limited to configured detectors.
+**Please read the full [Threat Model](docs/threat-model.md)** before relying on this tool.
 
-### Out of Scope
-- **An adversary on the user's machine**: If your local environment is compromised, the prompt is compromised. Session maps are stored as plain JSON.
-- **Semantic leakage**: Asking "what is wrong with my taxes given I made $X" is inherently identifying. Stripping names does not anonymize the question itself.
-- **Style fingerprinting**: Your writing style and cadence go out unchanged.
-- **Network/Key layer privacy**: We do not hide your IP address or request timing. Use a VPN, Tor, or a proxy for network-level privacy.
+## Documentation
+- [Threat Model](docs/threat-model.md)
+- [MVP Specification](docs/mvp-spec.md)
+- [Architecture](docs/architecture.md)
+- [v1 API Reference](docs/v1-api.md)
+- [CLI Reference](docs/cli.md)
+- [Detector System](docs/detector-system.md)
+- [Session Management](docs/session-management.md)
+- [Examples](docs/examples.md)
 
 ## Relationship to the Private Inference Proxy
 `prompt-scrub` was originally conceived as "Mode C" of the proposed Private Inference Proxy. It has since outgrown that framing to become a standalone tool. It has a different deployment shape (local library vs network service), threat model (content vs network), and release cadence. If the Proxy ships, it will act as a sibling project, and `prompt-scrub` will compose cleanly in front of it. 
