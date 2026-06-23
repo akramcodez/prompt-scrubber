@@ -1,7 +1,7 @@
 import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs';
-import { SessionMap } from '../types';
+import type { SessionMap } from '../types/index.js';
 
 /**
  * Determines the base configuration directory based on the OS.

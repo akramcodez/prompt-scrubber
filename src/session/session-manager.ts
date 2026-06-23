@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
-import { SessionMap } from '../types';
-import { readSessionMap, writeSessionMap, deleteSessionMap, listSessions } from './storage';
+import type { SessionMap } from '../types/index.js';
+import { readSessionMap, writeSessionMap, deleteSessionMap, listSessions } from './storage.js';
 
 export class SessionManager {
   private sessionId: string;
@@ -30,7 +30,7 @@ export class SessionManager {
     for (const placeholder of Object.keys(map)) {
       // Placeholder format: "Category_Index"
       const match = placeholder.match(/^([A-Za-z]+)_(\d+)$/);
-      if (match) {
+      if (match && match[1] && match[2]) {
         const category = match[1];
         const index = parseInt(match[2], 10);
         

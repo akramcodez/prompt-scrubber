@@ -1,1 +1,5 @@
-// Empty file - No implementation yet
+describe('Placeholder', () => {
+  it('should have tests later', () => {
+    expect(true).toBe(true);
+  });
+});
