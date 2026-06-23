@@ -12,8 +12,8 @@ API key: sk-123456
 
 **Scrubbed**
 ```text
-My email is [Email_1]
-API key: [Secret_1]
+My email is Email_1
+API key: Secret_1
 ```
 
 **Rehydrated**
@@ -31,10 +31,45 @@ I'm getting an error when fetching https://internal.company.com/api from /Users/
 
 **Scrubbed**
 ```text
-I'm getting an error when fetching [Url_1] from [Path_1]
+I'm getting an error when fetching Url_1 from Path_1
 ```
 
 **Rehydrated**
 ```text
 I'm getting an error when fetching https://internal.company.com/api from /Users/akram/dev/app/src/main.ts
 ```
+
+## Example 3: The Limits of the Scrubber (Rich Example)
+
+**Input**
+```text
+Hey, I'm Will. My team is hitting a deploy failure on https://staging.acme-internal.io.
+The error from the GitHub Actions run is:
+  Error: secret not found: ANTHROPIC_API_KEY=sk-ant-abc123...
+  at /Users/will/work/acme/.github/workflows/deploy.yml:42
+Can you take a look?
+```
+
+**Scrubbed (assuming Name detector is opted-in)**
+```text
+Hey, I'm Name_1. My team is hitting a deploy failure on Url_1.
+The error from the GitHub Actions run is:
+  Error: secret not found: Secret_1
+  at Path_1
+Can you take a look?
+```
+
+**Model Response**
+```text
+The error means the workflow is trying to read ANTHROPIC_API_KEY from the environment. Check the Path_1 line. Also, never hardcode Secret_2 in your files.
+```
+
+**Rehydrated**
+```text
+The error means the workflow is trying to read ANTHROPIC_API_KEY from the environment. Check the /Users/will/work/acme/.github/workflows/deploy.yml line. Also, never hardcode Secret_2 in your files.
+```
+
+*Note: A warning is emitted to `stderr` indicating `Secret_2` was not found in the session map (the model hallucinated a placeholder). The library passes it through unchanged.*
+
+**What Slipped Through (The Gap):**
+The developer's writing style ("Hey, I'm Will. My team is hitting..."), the fact that they have a team, and the cadence of their question. Style fingerprinting is not solved in v1.

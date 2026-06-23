@@ -12,7 +12,7 @@ Scrubs identifying content from a prompt or message.
 import { scrub } from '@nanocollective/prompt-scrub';
 
 const result = await scrub({
-  content: prompt, // The string or message object to scrub
+  content: prompt, // A string or an array of {role, content} objects
   sessionId: "abc123" // Optional. If omitted, a new session is generated.
 });
 
@@ -33,15 +33,29 @@ const restored = await rehydrate({
 });
 
 // restored.content contains the rehydrated text
+// restored.warnings contains any placeholders hallucinated by the model
 ```
+
+## Cache-Aware Determinism
+For a given session ID and input text, `scrub()` is **deterministic**. The system generates byte-identical output across repeated calls with the same map. This property is critical because it preserves provider prompt caching (which relies on exact prefix bytes). Callers can verify prefix stability via the hash output in the `inspect` CLI command.
 
 ## Types
 
 ```typescript
-export interface ScrubRequest {
+export interface Message {
+  role: string;
   content: string;
+}
+
+export interface ScrubRequest {
+  content: string | Message[];
   sessionId?: string;
   options?: ScrubOptions;
+}
+
+export interface ScrubOptions {
+  customDetectors?: Detector[];
+  disabledDetectors?: string[]; // Array of detector names to skip
 }
 
 export interface ScrubResult {
@@ -56,5 +70,6 @@ export interface RehydrateRequest {
 
 export interface RehydrateResult {
   content: string;
+  warnings?: string[]; // Populated if the model invents a placeholder not in the session map
 }
 ```

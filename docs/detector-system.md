@@ -43,4 +43,12 @@ If `SecretDetector` and `UrlDetector` match the same string (e.g., a URL with a 
 
 ## Registration System
 
-By default, the core scrub function runs the built-in detectors in priority order. Custom detectors can be passed in during the initialization of the library, effectively overriding or appending to the default list.
+By default, the core scrub function runs the built-in detectors in priority order. You can optionally pass `disabledDetectors` in the `ScrubOptions` to turn off specific built-ins.
+
+### Rule Packs & Custom Detectors
+
+Custom detectors can be passed in during the initialization of the library, effectively overriding or appending to the default list. 
+
+A "Rule Pack" is simply a standard npm package that exports one or more functions or classes conforming to the `Detector` interface. This allows the community to build project-specific rules. 
+
+Users can register rule packs via the CLI or by passing them into the `customDetectors` array in the library API. Installed rule packs can be listed using the `prompt-scrub rules list` command.

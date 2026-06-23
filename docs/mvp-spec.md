@@ -13,7 +13,8 @@
 
 ## Not Included
 
-- Name detection (proper nouns)
+- Name detection (proper nouns). *Rationale: Proper noun detection is where false positives hurt most. This is parked for v1.1 as an opt-in feature.*
+- Code Tell detection (private class names/conventions). *Rationale: The false positive cost on code is high. Parked for v1.1 as an opt-in feature.*
 - AI rewriting / Model-based paraphrasing
 - Stylistic fingerprint removal
 - Browser extension
@@ -29,7 +30,7 @@ My email is akram@example.com
 
 **Output:**
 ```text
-My email is [Email_1]
+My email is Email_1
 ```
 
 **Rehydration:**

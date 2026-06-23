@@ -37,3 +37,13 @@ prompt-scrub
   - `collision-resolver.ts`: Logic to handle overlapping findings from different detectors (the more specific detector wins).
 - **CLI (`src/cli/`)**: Command-line interface wrapping the core library. Exposes commands like `scrub`, `rehydrate`, `inspect`, and session management.
 - **Types (`src/types/`)**: Shared TypeScript interfaces (e.g., `Message`, `Finding`, `SessionMap`).
+
+## Data Flow: The `scrub()` Pipeline
+
+A single `scrub()` call flows through a five-step pipeline:
+
+1. **Accept the message**: `scrub()` accepts a string or an array of OpenAI-shaped `{ role, content }` objects.
+2. **Stabilise the session map**: If a session ID is provided, the existing map is loaded from disk (or in-process cache). If not, a new UUID and map are created.
+3. **Run the detector pipeline**: All enabled detectors run in sequence, producing deterministic `Finding` items for the input text based on the active session map.
+4. **Resolve collisions**: If two detectors flag the same or overlapping text, the `collision-resolver` determines the winner based on the defined priority sequence.
+5. **Apply the transformations**: The winning findings are replaced with stable placeholders (e.g., `Email_1`), the updated session map is saved, and the scrubbed message is returned alongside the session ID.

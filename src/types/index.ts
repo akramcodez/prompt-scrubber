@@ -1,3 +1,5 @@
+// Shared Types
+
 export interface Finding {
   category: string;
   span: [number, number];
@@ -14,14 +16,20 @@ export interface SessionMap {
   [placeholder: string]: string;
 }
 
-export interface ScrubRequest {
+export interface Message {
+  role: string;
   content: string;
+}
+
+export interface ScrubRequest {
+  content: string | Message[];
   sessionId?: string;
   options?: ScrubOptions;
 }
 
 export interface ScrubOptions {
   customDetectors?: Detector[];
+  disabledDetectors?: string[]; // Array of detector names to skip
 }
 
 export interface ScrubResult {
@@ -36,4 +44,5 @@ export interface RehydrateRequest {
 
 export interface RehydrateResult {
   content: string;
+  warnings?: string[]; // Populated if the model invents a placeholder not in the session map
 }
