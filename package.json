@@ -1,5 +1,5 @@
 {
-  "name": "prompt-scrubber",
+  "name": "prompt-scrub",
   "version": "1.0.0",
   "type": "module",
   "description": "`prompt-scrub` is a small open-source, local-first utility designed to strip identifying content out of prompts and messages before they hit any cloud LLM. It maps your sensitive data (emails, secrets, paths) to stable placeholders, allowing you to rehydrate the model's responses back to their original forms locally.",
@@ -10,7 +10,10 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "pretest": "tsc --noEmit",
+    "test": "ava",
+    "test:watch": "ava --watch",
+    "test:coverage": "c8 ava",
     "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\"",
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\""
   },
@@ -26,16 +29,27 @@
   },
   "homepage": "https://github.com/akramcodez/prompt-scrubber#readme",
   "devDependencies": {
-    "@types/jest": "^30.0.0",
+    "@ava/typescript": "^7.0.0",
     "@types/node": "^26.0.0",
     "@typescript-eslint/eslint-plugin": "^8.62.0",
     "@typescript-eslint/parser": "^8.62.0",
+    "ava": "^8.0.1",
+    "c8": "^11.0.0",
     "eslint": "^10.5.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
-    "jest": "^30.4.2",
     "prettier": "^3.8.4",
-    "ts-jest": "^29.4.11",
     "typescript": "^6.0.3"
+  },
+  "ava": {
+    "extensions": {
+      "ts": "module"
+    },
+    "nodeArguments": [
+      "--no-warnings"
+    ],
+    "files": [
+      "tests/**/*.test.ts"
+    ]
   }
 }
