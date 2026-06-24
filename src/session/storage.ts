@@ -105,12 +105,16 @@ export function listSessions(): Array<{ id: string; sizeBytes: number }> {
   }
 
   const files = fs.readdirSync(sessionsDir).filter(file => file.endsWith('.json'));
-  return files.map(file => {
-    const filePath = path.join(sessionsDir, file);
-    const stats = fs.statSync(filePath);
-    return {
-      id: path.basename(file, '.json'),
-      sizeBytes: stats.size,
-    };
-  });
+  return files
+    .map(file => {
+      const filePath = path.join(sessionsDir, file);
+      const stats = fs.statSync(filePath);
+      return {
+        id: path.basename(file, '.json'),
+        sizeBytes: stats.size,
+        mtimeMs: stats.mtimeMs,
+      };
+    })
+    .sort((a, b) => b.mtimeMs - a.mtimeMs)
+    .map(({ id, sizeBytes }) => ({ id, sizeBytes }));
 }

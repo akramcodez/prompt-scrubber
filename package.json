@@ -33,20 +33,22 @@
     "@types/node": "^26.0.0",
     "@typescript-eslint/eslint-plugin": "^8.62.0",
     "@typescript-eslint/parser": "^8.62.0",
-    "ava": "^8.0.1",
+    "ava": "^5.3.1",
     "c8": "^11.0.0",
     "eslint": "^10.5.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
     "prettier": "^3.8.4",
+    "tsx": "^4.22.4",
     "typescript": "^6.0.3"
   },
   "ava": {
-    "extensions": {
-      "ts": "module"
-    },
+    "extensions": [
+      "ts"
+    ],
     "nodeArguments": [
-      "--no-warnings"
+      "--no-warnings",
+      "--import=tsx"
     ],
     "files": [
       "tests/**/*.test.ts"
