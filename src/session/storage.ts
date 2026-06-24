@@ -41,6 +41,15 @@ export function readSessionMap(sessionId: string): SessionMap {
     return JSON.parse(data) as SessionMap;
   } catch (error) {
     console.error(`Error reading session map for ID ${sessionId}:`, error);
+    if (fs.existsSync(filePath)) {
+      const corruptPath = `${filePath}.corrupt-${Date.now()}`;
+      try {
+        fs.renameSync(filePath, corruptPath);
+        console.warn(`Renamed corrupt session map to ${corruptPath}`);
+      } catch (renameError) {
+        console.error(`Failed to rename corrupt session map:`, renameError);
+      }
+    }
     return {};
   }
 }
@@ -51,15 +60,20 @@ export function readSessionMap(sessionId: string): SessionMap {
 export function writeSessionMap(sessionId: string, map: SessionMap): void {
   const filePath = getSessionStoragePath(sessionId);
   const dirPath = path.dirname(filePath);
+  const tmpPath = `${filePath}.tmp`;
 
   if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
+    fs.mkdirSync(dirPath, { recursive: true, mode: 0o700 });
   }
 
   try {
-    fs.writeFileSync(filePath, JSON.stringify(map, null, 2), 'utf-8');
+    fs.writeFileSync(tmpPath, JSON.stringify(map, null, 2), { encoding: 'utf-8', mode: 0o600 });
+    fs.renameSync(tmpPath, filePath);
   } catch (error) {
     console.error(`Error writing session map for ID ${sessionId}:`, error);
+    if (fs.existsSync(tmpPath)) {
+      try { fs.unlinkSync(tmpPath); } catch {}
+    }
     throw error;
   }
 }
