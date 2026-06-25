@@ -10,7 +10,7 @@ import type { Detector, Finding } from '../../types/index.js';
 
 export function handleInspect(text: string, options: { disable?: string }) {
   const disabledDetectors = new Set(
-    options.disable ? options.disable.split(',').map((s) => s.trim()) : [],
+    (options.disable ?? '').split(',').map((s) => s.trim().toLowerCase().replace('detector', '')),
   );
 
   const detectors: Detector[] = [
@@ -19,7 +19,7 @@ export function handleInspect(text: string, options: { disable?: string }) {
     new UrlDetector(),
     new PathDetector(),
     new PhoneDetector(),
-  ].filter((d) => !disabledDetectors.has(d.name));
+  ].filter((d) => !disabledDetectors.has(d.name.toLowerCase().replace('detector', '')));
 
   const allFindings = detectors.flatMap((d) => d.detect(text));
   const findings = resolveCollisions(allFindings);
@@ -85,8 +85,7 @@ export function setupInspectCommand(program: Command) {
       }
 
       if (!input) {
-        console.error('No input provided.');
-        process.exit(1);
+        process.exit(0);
       }
 
       const findings = handleInspect(input, options);

@@ -46,8 +46,7 @@ export function setupScrubCommand(program: Command) {
       }
 
       if (!input) {
-        console.error('No input provided.');
-        process.exit(1);
+        process.exit(0);
       }
 
       const result = handleScrub(input, options);

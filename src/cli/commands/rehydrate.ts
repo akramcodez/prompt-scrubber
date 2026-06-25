@@ -37,8 +37,7 @@ export function setupRehydrateCommand(program: Command) {
       }
 
       if (!input) {
-        console.error('No input provided.');
-        process.exit(1);
+        process.exit(0);
       }
 
       const result = handleRehydrate(input, options);
