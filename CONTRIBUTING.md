@@ -12,7 +12,7 @@ We also operate under the [Nano Collective Economics Charter](https://nanocollec
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/akramcodez/prompt-scrubber.git
+   git clone https://github.com/Nano-Collective/prompt-scrubber.git
    cd prompt-scrubber
    ```
 

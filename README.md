@@ -4,11 +4,11 @@
 
 **A Nano Collective project.** Building open, privacy-respecting, local-first tools for the next generation of software.
 
-![Build Status](https://img.shields.io/github/actions/workflow/status/akramcodez/prompt-scrubber/pr-checks.yml?branch=main)
+![Build Status](https://img.shields.io/github/actions/workflow/status/Nano-Collective/prompt-scrubber/pr-checks.yml?branch=main)
 ![Coverage](https://img.shields.io/badge/coverage-100%25-success)
 ![Version](https://img.shields.io/npm/v/@nanocollective/prompt-scrub)
 ![Downloads](https://img.shields.io/npm/dm/@nanocollective/prompt-scrub)
-![License](https://img.shields.io/github/license/akramcodez/prompt-scrubber)
+![License](https://img.shields.io/github/license/Nano-Collective/prompt-scrubber)
 
 It maps sensitive data (emails, secrets, paths, URLs, phone numbers) to stable placeholders locally, allowing you to rehydrate the model's responses back to their original forms securely.
 
@@ -63,4 +63,4 @@ Read the full whitepaper at [docs.nanocollective.org](https://docs.nanocollectiv
 
 - **Discord:** [Join the Nano Collective Discord](https://discord.gg/ktPDV6rekE)
 - **Contributing:** Read our [Contributing Guide](CONTRIBUTING.md) to get started.
-- **Issues:** Check the [GitHub Issues](https://github.com/akramcodez/prompt-scrubber/issues) for planned work or to report bugs.
+- **Issues:** Check the [GitHub Issues](https://github.com/Nano-Collective/prompt-scrubber/issues) for planned work or to report bugs.
