@@ -40,7 +40,7 @@ export function readSessionMap(sessionId: string): SessionMap {
     const data = fs.readFileSync(filePath, 'utf-8');
     return JSON.parse(data) as SessionMap;
   } catch (error) {
-    console.error(`Error reading session map for ID ${sessionId}:`, error);
+    console.error(`Error reading session map for ID ${sessionId}: ${(error as Error).message}`);
     if (fs.existsSync(filePath)) {
       const corruptPath = `${filePath}.corrupt-${Date.now()}`;
       try {
