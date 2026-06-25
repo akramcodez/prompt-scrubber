@@ -23,15 +23,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/akramcodez/prompt-scrubber.git"
+    "url": "git+https://github.com/Nano-Collective/prompt-scrubber.git"
   },
   "keywords": [],
   "author": "Nano Collective",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/akramcodez/prompt-scrubber/issues"
+    "url": "https://github.com/Nano-Collective/prompt-scrubber/issues"
   },
-  "homepage": "https://github.com/akramcodez/prompt-scrubber#readme",
+  "homepage": "https://github.com/Nano-Collective/prompt-scrubber#readme",
   "devDependencies": {
     "@ava/typescript": "^7.0.0",
     "@types/node": "^26.0.0",
