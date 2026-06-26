@@ -14,7 +14,7 @@ export function setupSessionsCommands(program: Command) {
         return;
       }
 
-      console.log('ID'.padEnd(40) + ' | ' + 'Created'.padEnd(25) + ' | ' + 'Placeholders');
+      console.log(`${'ID'.padEnd(40)} | ${'Created'.padEnd(25)} | Placeholders`);
       console.log('-'.repeat(85));
 
       for (const session of sessions) {

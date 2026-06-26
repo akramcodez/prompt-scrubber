@@ -25,7 +25,7 @@
     "test:format": "biome ci --formatter-enabled=true --linter-enabled=false --assist-enabled=false .",
     "test:types": "tsc --noEmit",
     "test:lint": "biome lint .",
-    "test:lint:fix": "biome lint --write .",
+    "test:lint:fix": "biome lint --write --unsafe .",
     "test:ava": "ava",
     "test:ava:coverage": "c8 --reporter=text --reporter=json-summary ava",
     "test:knip": "knip",

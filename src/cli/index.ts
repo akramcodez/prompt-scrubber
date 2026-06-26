@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { setupScrubCommand } from './commands/scrub.js';
 import { setupRehydrateCommand } from './commands/rehydrate.js';
 import { setupInspectCommand } from './commands/inspect.js';
