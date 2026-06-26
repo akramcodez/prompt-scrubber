@@ -1,4 +1,4 @@
-import { Command } from 'commander';
+import type { Command } from 'commander';
 import { readFileSync } from 'fs';
 import { resolveCollisions } from '../../core/collision-resolver.js';
 import { EmailDetector } from '../../detectors/email.js';

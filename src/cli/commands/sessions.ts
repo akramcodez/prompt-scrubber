@@ -1,4 +1,4 @@
-import { Command } from 'commander';
+import type { Command } from 'commander';
 import { listSessions, readSessionMap, deleteSessionMap } from '../../session/storage.js';
 
 export function setupSessionsCommands(program: Command) {

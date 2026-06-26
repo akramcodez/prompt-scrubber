@@ -14,7 +14,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 // Depending on whether we run from src or dist, package.json might be up 2 or 3 levels.
 // Easiest is just checking both or requiring it dynamically. Wait, standard ESM trick:
-let pkg;
+let pkg: any;
 try {
   pkg = JSON.parse(readFileSync(join(__dirname, '..', '..', 'package.json'), 'utf8'));
 } catch {
