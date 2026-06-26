@@ -4,11 +4,14 @@ Built by the [Nano Collective](https://nanocollective.org) — a community colle
 
 `prompt-scrub` is a local-first utility designed to strip identifying content out of prompts and messages before they hit any cloud LLM.
 
-![Build Status](https://img.shields.io/github/actions/workflow/status/Nano-Collective/prompt-scrubber/pr-checks.yml?branch=main)
-![Coverage](https://img.shields.io/badge/coverage-100%25-success)
-![Version](https://img.shields.io/npm/v/@nanocollective/prompt-scrub)
-![Downloads](https://img.shields.io/npm/dm/@nanocollective/prompt-scrub)
-![License](https://img.shields.io/github/license/Nano-Collective/prompt-scrubber)
+![Build Status](https://github.com/Nano-Collective/prompt-scrubber/raw/main/badges/build.svg)
+![Coverage](https://github.com/Nano-Collective/prompt-scrubber/raw/main/badges/coverage.svg)
+![Version](https://github.com/Nano-Collective/prompt-scrubber/raw/main/badges/npm-version.svg)
+![Downloads](https://github.com/Nano-Collective/prompt-scrubber/raw/main/badges/npm-downloads-monthly.svg)
+![License](https://github.com/Nano-Collective/prompt-scrubber/raw/main/badges/npm-license.svg)
+![Repo Size](https://github.com/Nano-Collective/prompt-scrubber/raw/main/badges/repo-size.svg)
+![Stars](https://github.com/Nano-Collective/prompt-scrubber/raw/main/badges/stars.svg)
+![Forks](https://github.com/Nano-Collective/prompt-scrubber/raw/main/badges/forks.svg)
 
 It maps sensitive data (emails, secrets, paths, URLs, phone numbers) to stable placeholders locally, allowing you to rehydrate the model's responses back to their original forms securely.
 
