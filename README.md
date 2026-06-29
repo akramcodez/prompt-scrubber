@@ -1,5 +1,8 @@
 # prompt-scrub
 
+> [!WARNING]  
+> This project is still being built and finalised - it is not yet publically versioned and released. Feel free to star, inspect the code thus far and get involved! Release coming soon. 
+
 Built by the [Nano Collective](https://nanocollective.org) — a community collective building AI tooling not for profit, but for the community.
 
 `prompt-scrub` is a local-first utility designed to strip identifying content out of prompts and messages before they hit any cloud LLM.
