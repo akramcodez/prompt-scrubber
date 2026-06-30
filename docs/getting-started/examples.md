@@ -1,6 +1,6 @@
 ---
 title: "Examples"
-description: "Documentation for Examples"
+description: "Real-world examples of scrubbing and rehydrating"
 sidebar_order: 1
 ---
 
@@ -56,14 +56,16 @@ The error from the GitHub Actions run is:
 Can you take a look?
 ```
 
-**Scrubbed (assuming Name detector is opted-in)**
+**Scrubbed**
 ```text
-Hey, I'm Name_1. My team is hitting a deploy failure on Url_1.
+Hey, I'm Will. My team is hitting a deploy failure on Url_1.
 The error from the GitHub Actions run is:
   Error: secret not found: Secret_1
   at Path_1
 Can you take a look?
 ```
+
+Note that the name "Will" passes through unchanged: v1 ships email, phone, path, secret, and URL detectors, but no name detector. The URL, secret, and path are caught; the personal name is not.
 
 **Model Response**
 ```text
@@ -78,7 +80,7 @@ The error means the workflow is trying to read ANTHROPIC_API_KEY from the enviro
 *Note: A warning is emitted to `stderr` indicating `Secret_2` was not found in the session map (the model hallucinated a placeholder). The library passes it through unchanged.*
 
 **What Slipped Through (The Gap):**
-The developer's writing style ("Hey, I'm Will. My team is hitting..."), the fact that they have a team, and the cadence of their question. Style fingerprinting is not solved in v1.
+The developer's name ("Will" — no name detector in v1), their writing style ("Hey, I'm Will. My team is hitting..."), the fact that they have a team, and the cadence of their question. Style fingerprinting is not solved in v1.
 
 ## Example 4: Node.js Library Integration
 

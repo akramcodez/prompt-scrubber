@@ -13,7 +13,7 @@ There are two primary ways to install `prompt-scrub` depending on your use case:
 If you want to use the `prompt-scrub` command directly from your terminal across your system:
 
 ```bash
-npm install -g prompt-scrub
+npm install -g @nanocollective/prompt-scrub
 ```
 
 ## Local Project Dependency
@@ -21,7 +21,7 @@ npm install -g prompt-scrub
 If you are building an application and want to use `prompt-scrub` programmatically via its Node.js API:
 
 ```bash
-npm install prompt-scrub
+npm install @nanocollective/prompt-scrub
 ```
 
 This will add it to your project's `node_modules` so you can import it in your code.

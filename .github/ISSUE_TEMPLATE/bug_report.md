@@ -1,29 +1,42 @@
 ---
-name: Bug report
-about: Create a report to help us improve
-title: ''
+name: Bug Report
+about: Report a bug or unexpected behavior
+title: '[Bug] '
 labels: bug
 assignees: ''
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+## Description
 
-**Environment:**
- - OS: [e.g. macOS 14.1, Ubuntu 22.04]
- - Node Version: [e.g. 20.x]
- - prompt-scrub version: [e.g. 1.0.0]
+Brief description of the bug
 
-**Steps to Reproduce:**
-1. Run command '...'
-2. Input '...'
-3. See error
+## Environment
 
-**Expected vs Actual Behaviour:**
-What you expected to happen vs what actually happened.
+- **OS**: (e.g., macOS 14.0, Ubuntu 22.04, Windows 11)
+- **Node version**: (run `node --version`)
+- **prompt-scrub version**: (run `prompt-scrub --version`)
+- **Install type**: (global CLI or local library)
 
-**Logs / Screenshots:**
-If applicable, add logs or screenshots to help explain your problem.
+## Steps to Reproduce
 
-**Checklist:**
-- [ ] I have searched the existing issues for duplicates.
+1.
+2.
+3.
+
+## Expected Behavior
+
+What you expected to happen
+
+## Actual Behavior
+
+What actually happened
+
+## Logs/Screenshots
+
+If applicable, add logs or screenshots to help explain the problem
+
+## Additional Context
+
+- [ ] I have searched existing issues to ensure this is not a duplicate
+- [ ] I can reproduce this issue consistently
+- [ ] This issue occurs with the latest version of prompt-scrub

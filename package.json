@@ -1,5 +1,5 @@
 {
-  "name": "prompt-scrub",
+  "name": "@nanocollective/prompt-scrub",
   "version": "1.0.0",
   "packageManager": "pnpm@11.0.9",
   "type": "module",
@@ -7,6 +7,9 @@
   "main": "index.js",
   "bin": {
     "prompt-scrub": "./dist/cli/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "directories": {
     "doc": "docs",

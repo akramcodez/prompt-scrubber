@@ -1,6 +1,6 @@
 ---
-title: "Cli"
-description: "Documentation for Cli"
+title: "CLI Reference"
+description: "Using the prompt-scrub command-line tool"
 sidebar_order: 1
 ---
 

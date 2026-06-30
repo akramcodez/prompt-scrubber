@@ -1,6 +1,6 @@
 ---
 title: "Architecture"
-description: "Documentation for Architecture"
+description: "How prompt-scrub is structured and how the scrub pipeline flows"
 sidebar_order: 1
 ---
 

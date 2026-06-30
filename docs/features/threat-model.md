@@ -1,6 +1,6 @@
 ---
 title: "Threat Model"
-description: "Documentation for Threat Model"
+description: "What prompt-scrub defends against, and what it does not"
 sidebar_order: 1
 ---
 

@@ -1,22 +1,32 @@
 ---
-name: Feature request
-about: Suggest an idea for this project
-title: ''
+name: Feature Request
+about: Suggest a new feature or enhancement
+title: '[Feature] '
 labels: enhancement
 assignees: ''
 ---
 
-**Description**
-A clear and concise description of what the feature is.
+## Description
 
-**Use Case**
-Why do you need this feature? What problem does it solve?
+Brief description of the feature you'd like to see
 
-**Proposed Solution**
-How do you think this should be implemented?
+## Use Case
 
-**Alternatives**
-Any alternative solutions or workarounds you've considered.
+Describe the problem this feature would solve or the use case it would enable
 
-**Alignment**
-- [ ] This feature aligns with our local-first, privacy-respecting values.
+## Proposed Solution
+
+How you envision this feature working
+
+## Alternatives Considered
+
+Any alternative solutions or features you've considered
+
+## Additional Context
+
+- [ ] I have searched existing issues to ensure this is not a duplicate
+- [ ] This feature aligns with the project's goals (local-first, privacy-respecting tooling)
+
+## Implementation Notes (optional)
+
+If you have thoughts on how this could be implemented, share them here

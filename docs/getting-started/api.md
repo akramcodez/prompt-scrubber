@@ -1,6 +1,6 @@
 ---
-title: "V1 Api"
-description: "Documentation for V1 Api"
+title: "API Reference"
+description: "Using prompt-scrub as a Node.js library"
 sidebar_order: 1
 ---
 

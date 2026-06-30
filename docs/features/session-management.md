@@ -1,6 +1,6 @@
 ---
 title: "Session Management"
-description: "Documentation for Session Management"
+description: "How prompt-scrub persists placeholder mappings locally"
 sidebar_order: 1
 ---
 

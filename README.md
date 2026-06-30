@@ -23,13 +23,13 @@ It maps sensitive data (emails, secrets, paths, URLs, phone numbers) to stable p
 Install globally to use the CLI:
 
 ```bash
-npm install -g prompt-scrub
+npm install -g @nanocollective/prompt-scrub
 ```
 
 Or install as a dependency in your Node.js project:
 
 ```bash
-npm install prompt-scrub
+npm install @nanocollective/prompt-scrub
 ```
 
 ## Usage Examples
@@ -42,7 +42,7 @@ echo "My email is user@example.com" | prompt-scrub scrub
 
 **Node.js API: Scrubbing and Rehydrating**
 ```typescript
-import { scrub, rehydrate } from 'prompt-scrub';
+import { scrub, rehydrate } from '@nanocollective/prompt-scrub';
 
 const prompt = "My key is sk-12345";
 const { scrubbedContent, sessionId } = scrub({ content: prompt });

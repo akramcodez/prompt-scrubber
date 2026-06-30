@@ -1,6 +1,6 @@
 ---
 title: "Detector System"
-description: "Documentation for Detector System"
+description: "How the pluggable detector system finds sensitive information"
 sidebar_order: 1
 ---
 
