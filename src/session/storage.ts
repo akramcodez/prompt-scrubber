@@ -5,8 +5,17 @@ import type { SessionMap } from '../types/index.js';
 
 /**
  * Determines the base configuration directory based on the OS.
+ *
+ * An explicit override via the `PROMPT_SCRUB_CONFIG_DIR` environment variable
+ * always takes precedence. This is primarily intended for tests, but it also
+ * lets users relocate the storage directory on any platform.
  */
 function getConfigDir(): string {
+  const override = process.env.PROMPT_SCRUB_CONFIG_DIR;
+  if (override && override.length > 0) {
+    return override;
+  }
+
   const platform = os.platform();
   const homedir = os.homedir();
 

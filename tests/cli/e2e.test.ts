@@ -15,7 +15,9 @@ function runCli(args: string[], input?: string) {
     encoding: 'utf-8',
     env: {
       ...process.env,
-      XDG_CONFIG_HOME: tmpConfigDir,
+      // Force the CLI to use the local temp folder. PROMPT_SCRUB_CONFIG_DIR
+      // is honored on every platform; XDG_CONFIG_HOME only works on Linux.
+      PROMPT_SCRUB_CONFIG_DIR: path.join(tmpConfigDir, 'prompt-scrub'),
     },
   });
 }

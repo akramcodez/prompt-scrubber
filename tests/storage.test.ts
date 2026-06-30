@@ -15,8 +15,10 @@ const __dirname = path.dirname(__filename);
 const tmpConfigDir = path.join(__dirname, '.tmp-config');
 
 test.before(() => {
-  // Override XDG_CONFIG_HOME to write to a local temp folder instead of the user's real config
-  process.env.XDG_CONFIG_HOME = tmpConfigDir;
+  // Redirect storage to a local temp folder instead of the user's real config dir.
+  // PROMPT_SCRUB_CONFIG_DIR is honored on every platform; XDG_CONFIG_HOME is only
+  // read on non-darwin non-win32 platforms, so it's not enough for tests on macOS.
+  process.env.PROMPT_SCRUB_CONFIG_DIR = path.join(tmpConfigDir, 'prompt-scrub');
 
   // Clean up if it exists from a previous failed run
   if (fs.existsSync(tmpConfigDir)) {
