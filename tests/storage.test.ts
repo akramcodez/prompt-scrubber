@@ -90,6 +90,24 @@ test('deleteSessionMap returns true on hit and false on miss', (t) => {
   t.false(deletedMissing);
 });
 
+test('deleteSessionMap handles unlinkSync error', (t) => {
+  const id = 'delete-fail-test-id';
+  const filePath = getSessionStoragePath(id);
+  const dirPath = path.dirname(filePath);
+
+  writeSessionMap(id, { Secret_1: 'sk-fail' });
+  fs.chmodSync(dirPath, 0o555); // make directory read-only so unlink fails
+
+  const originalError = console.error;
+  console.error = () => {};
+
+  const result = deleteSessionMap(id);
+  t.false(result);
+
+  console.error = originalError;
+  fs.chmodSync(dirPath, 0o777); // restore
+});
+
 test('listSessions ignores non-.json files', (t) => {
   const id = 'list-test-id';
   writeSessionMap(id, { Phone_1: '555-1234' });
@@ -128,4 +146,128 @@ test('listSessions returns sessions sorted by most recently modified', async (t)
 test('getSessionStoragePath returns correctly formatted path', (t) => {
   const p = getSessionStoragePath('123');
   t.true(p.endsWith(path.join('prompt-scrub', 'sessions', '123.json')));
+});
+
+test.serial('getConfigDir handles darwin', (t) => {
+  const originalOverride = process.env.PROMPT_SCRUB_CONFIG_DIR;
+  const originalMock = process.env.MOCK_PLATFORM;
+  delete process.env.PROMPT_SCRUB_CONFIG_DIR;
+  process.env.MOCK_PLATFORM = 'darwin';
+
+  const p = getSessionStoragePath('test');
+  t.true(
+    p.includes(
+      path.join('Library', 'Application Support', 'prompt-scrub', 'sessions', 'test.json'),
+    ),
+  );
+
+  process.env.PROMPT_SCRUB_CONFIG_DIR = originalOverride;
+  process.env.MOCK_PLATFORM = originalMock;
+});
+
+test.serial('getConfigDir handles win32 with APPDATA', (t) => {
+  const originalOverride = process.env.PROMPT_SCRUB_CONFIG_DIR;
+  const originalMock = process.env.MOCK_PLATFORM;
+  const originalAppData = process.env.APPDATA;
+  delete process.env.PROMPT_SCRUB_CONFIG_DIR;
+  process.env.MOCK_PLATFORM = 'win32';
+  process.env.APPDATA = '/mock/appdata';
+
+  const p = getSessionStoragePath('test');
+  t.true(p.includes(path.join('mock', 'appdata', 'prompt-scrub')));
+
+  process.env.PROMPT_SCRUB_CONFIG_DIR = originalOverride;
+  process.env.MOCK_PLATFORM = originalMock;
+  process.env.APPDATA = originalAppData;
+});
+
+test.serial('getConfigDir handles win32 without APPDATA fallback to AppData/Roaming', (t) => {
+  const originalOverride = process.env.PROMPT_SCRUB_CONFIG_DIR;
+  const originalMock = process.env.MOCK_PLATFORM;
+  const originalAppData = process.env.APPDATA;
+  delete process.env.PROMPT_SCRUB_CONFIG_DIR;
+  process.env.MOCK_PLATFORM = 'win32';
+  delete process.env.APPDATA;
+
+  const p = getSessionStoragePath('test');
+  t.true(p.includes(path.join('AppData', 'Roaming', 'prompt-scrub')));
+
+  process.env.PROMPT_SCRUB_CONFIG_DIR = originalOverride;
+  process.env.MOCK_PLATFORM = originalMock;
+  process.env.APPDATA = originalAppData;
+});
+
+test.serial('getConfigDir handles linux with XDG_CONFIG_HOME', (t) => {
+  const originalOverride = process.env.PROMPT_SCRUB_CONFIG_DIR;
+  const originalMock = process.env.MOCK_PLATFORM;
+  const originalXdg = process.env.XDG_CONFIG_HOME;
+  delete process.env.PROMPT_SCRUB_CONFIG_DIR;
+  process.env.MOCK_PLATFORM = 'linux';
+  process.env.XDG_CONFIG_HOME = '/mock/xdg';
+
+  const p = getSessionStoragePath('test');
+  t.true(p.includes(path.join('mock', 'xdg', 'prompt-scrub')));
+
+  process.env.PROMPT_SCRUB_CONFIG_DIR = originalOverride;
+  process.env.MOCK_PLATFORM = originalMock;
+  process.env.XDG_CONFIG_HOME = originalXdg;
+});
+
+test.serial('getConfigDir handles linux without XDG_CONFIG_HOME fallback to .config', (t) => {
+  const originalOverride = process.env.PROMPT_SCRUB_CONFIG_DIR;
+  const originalMock = process.env.MOCK_PLATFORM;
+  const originalXdg = process.env.XDG_CONFIG_HOME;
+  delete process.env.PROMPT_SCRUB_CONFIG_DIR;
+  process.env.MOCK_PLATFORM = 'linux';
+  delete process.env.XDG_CONFIG_HOME;
+
+  const p = getSessionStoragePath('test');
+  t.true(p.includes(path.join('.config', 'prompt-scrub')));
+
+  process.env.PROMPT_SCRUB_CONFIG_DIR = originalOverride;
+  process.env.MOCK_PLATFORM = originalMock;
+  process.env.XDG_CONFIG_HOME = originalXdg;
+});
+
+test('writeSessionMap failure path handles unlinkSync error', (t) => {
+  const id = 'write-fail-test';
+  const filePath = getSessionStoragePath(id);
+  const tmpPath = `${filePath}.tmp`;
+
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.mkdirSync(tmpPath, { recursive: true }); // Cause EISDIR
+
+  const originalError = console.error;
+  console.error = () => {};
+
+  t.throws(() => {
+    writeSessionMap(id, { Email_1: 'fail@test.com' });
+  });
+
+  console.error = originalError;
+  fs.rmSync(tmpPath, { recursive: true, force: true });
+});
+
+test('readSessionMap fails to rename corrupt file gracefully', (t) => {
+  const id = 'corrupt-rename-fail-test';
+  const filePath = getSessionStoragePath(id);
+  const dirPath = path.dirname(filePath);
+
+  writeSessionMap(id, { Secret_1: 'sk-1234' });
+  fs.writeFileSync(filePath, '{ bad json', 'utf-8');
+
+  fs.chmodSync(dirPath, 0o555); // Read-only directory prevents rename
+
+  const originalError = console.error;
+  const originalWarn = console.warn;
+  console.error = () => {};
+  console.warn = () => {};
+
+  const readMap = readSessionMap(id);
+
+  console.error = originalError;
+  console.warn = originalWarn;
+
+  t.deepEqual(readMap, {});
+  fs.chmodSync(dirPath, 0o777); // Restore to allow cleanup
 });

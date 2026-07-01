@@ -66,6 +66,37 @@ test('detects high-entropy base64 string in quotes', (t) => {
   t.true(findings.length >= 1);
 });
 
+test('detects high-entropy string without key-value context', (t) => {
+  const entropy = 'aB3dEf7gHi9JkLm2NoPqR5sTuV8wXyZ';
+  const findings = detector.detect(`"${entropy}"`);
+  t.is(findings.length, 1);
+  t.is(findings[0]?.value, entropy);
+});
+
+test('replaces shorter overlap with longer overlap', (t) => {
+  // We can force this by providing something that matches HIGH_ENTROPY twice but overlapping,
+  // or a KV match that gets overridden.
+  // KV_PATTERN matches 8+ chars. HIGH_ENTROPY matches 20+.
+  // If we have token="aB3dEf7gHi9JkLm2NoPqR5sTuV8wXyZ==",
+  // KV might match aB3dEf7gHi9JkLm2NoPqR5sTuV8wXyZ==.
+  // Actually, we can just use the mock directly or rely on a string that produces multiple overlap hits.
+  // Bearer matches `Bearer abcdef...` (Layer 1).
+  // KV matches `Bearer: abcdef...` (Layer 2).
+  // Layer 1 `Bearer abc...` returns value `abc...`.
+  // If we want a longer overlap, we can trigger two patterns.
+  // KV pattern: `key: "short_part_long_part"` -> value is `short_part_long_part`
+  // High entropy pattern: `"short_part_long_part"` -> value is `short_part_long_part`
+  // To get a length difference, we could have a prefix pattern that matches part of it.
+
+  // Google API key regex matches exactly 39 chars.
+  // High entropy regex matches the entire base64 string.
+  // We append high-entropy chars to ensure shannonEntropy >= 4.5.
+  const longSecret = 'AIzaSyD9tSrke72I6kT0lKjT5hTjHfkHj3sxDMaB3dEf7gHi9JkLm2NoPqR5sTuV8wXyZ';
+  const findings = detector.detect(`"${longSecret}"`);
+  t.is(findings.length, 1);
+  t.is(findings[0]?.value, longSecret); // It should pick the longer one!
+});
+
 // --- Negative Cases ---
 
 test('does not match ordinary words', (t) => {

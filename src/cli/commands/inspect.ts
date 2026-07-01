@@ -70,6 +70,7 @@ export function setupInspectCommand(program: Command) {
         } catch (err: unknown) {
           console.error(`Error reading file: ${(err as Error).message}`);
           process.exit(1);
+          return;
         }
       } else {
         // Read from stdin
@@ -78,11 +79,13 @@ export function setupInspectCommand(program: Command) {
         } catch {
           console.error('No input provided.');
           process.exit(1);
+          return;
         }
       }
 
       if (!input) {
         process.exit(0);
+        return;
       }
 
       const findings = handleInspect(input, options);

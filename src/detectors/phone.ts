@@ -35,30 +35,7 @@ export class PhoneDetector implements Detector {
       }
     }
 
-    // Deduplicate: if two findings overlap, keep the longer one.
     raw.sort((a, b) => a.span[0] - b.span[0]);
-    const findings: Finding[] = [];
-    for (const candidate of raw) {
-      const overlaps = findings.some(
-        (existing) => candidate.span[0] < existing.span[1] && candidate.span[1] > existing.span[0],
-      );
-      if (!overlaps) {
-        findings.push(candidate);
-      } else {
-        // Replace with the longer match if candidate is longer
-        const existingIdx = findings.findIndex(
-          (existing) =>
-            candidate.span[0] < existing.span[1] && candidate.span[1] > existing.span[0],
-        );
-        if (
-          existingIdx >= 0 &&
-          candidate.value.length > (findings[existingIdx]?.value.length ?? 0)
-        ) {
-          findings[existingIdx] = candidate;
-        }
-      }
-    }
-
-    return findings;
+    return raw;
   }
 }

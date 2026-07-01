@@ -32,19 +32,9 @@ export class PathDetector implements Detector {
       }
     }
 
-    // Sort by position, remove exact duplicates
+    // The regexes are mutually exclusive by prefix (/, ~/, Drive:\)
+    // so they will not yield identical or overlapping spans.
     raw.sort((a, b) => a.span[0] - b.span[0]);
-    const findings: Finding[] = [];
-    for (const candidate of raw) {
-      const duplicate = findings.some(
-        (existing) =>
-          existing.span[0] === candidate.span[0] && existing.span[1] === candidate.span[1],
-      );
-      if (!duplicate) {
-        findings.push(candidate);
-      }
-    }
-
-    return findings;
+    return raw;
   }
 }

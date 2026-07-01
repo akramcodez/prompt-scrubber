@@ -114,3 +114,78 @@ test('CLI: sessions commands manage state', (t) => {
   t.not(showGoneRes.status, 0);
   t.true(showGoneRes.stderr.includes('not found'));
 });
+
+test('CLI: scrub fails when input file does not exist', (t) => {
+  const result = runCli(['scrub', 'non-existent-file-123.txt']);
+  t.not(result.status, 0);
+  t.true(result.stderr.includes('Error reading file') && result.stderr.includes('ENOENT'));
+});
+
+test('CLI: scrub fails when reading from stdin with no input provided', (t) => {
+  // Pass an empty string as input
+  const result = runCli(['scrub'], '');
+  t.is(result.status, 0); // Actually scrub.ts says process.exit(0) if !input
+  t.is(result.stdout, '');
+});
+
+test('CLI: sessions show fails with invalid session id', (t) => {
+  const result = runCli(['sessions', 'show', 'invalid-id-xyz']);
+  t.not(result.status, 0);
+  t.true(result.stderr.includes('not found'));
+});
+
+test('CLI: sessions rm --all handles empty sessions gracefully', (t) => {
+  // Clear the dir first
+  const sessionsDir = path.join(tmpConfigDir, 'prompt-scrub', 'sessions');
+  if (fs.existsSync(sessionsDir)) {
+    fs.rmSync(sessionsDir, { recursive: true, force: true });
+  }
+  const result = runCli(['sessions', 'rm', '--all']);
+  t.is(result.status, 0);
+  t.true(result.stdout.includes('No sessions to remove.'));
+});
+
+test('CLI: sessions rm --all successfully removes multiple sessions', (t) => {
+  runCli(['scrub'], 'Contact alice@example.com');
+  runCli(['scrub'], 'Contact bob@example.com');
+
+  const result = runCli(['sessions', 'rm', '--all']);
+  t.is(result.status, 0);
+  t.true(result.stdout.includes('Deleted 2 sessions.'));
+});
+
+test('CLI: rehydrate fails when input file does not exist', (t) => {
+  const result = runCli(['rehydrate', '--session-id', 'test-id', 'non-existent-file-123.txt']);
+  t.not(result.status, 0);
+  t.true(result.stderr.includes('Error reading file'));
+});
+
+test('CLI: rehydrate fails when reading from stdin with no input provided', (t) => {
+  const result = runCli(['rehydrate', '--session-id', 'test-id'], '');
+  t.is(result.status, 0);
+  t.is(result.stdout, '');
+});
+
+test('CLI: inspect fails when input file does not exist', (t) => {
+  const result = runCli(['inspect', 'non-existent-file-123.txt']);
+  t.not(result.status, 0);
+  t.true(result.stderr.includes('Error reading file'));
+});
+
+test('CLI: inspect fails when reading from stdin with no input provided', (t) => {
+  const result = runCli(['inspect'], '');
+  t.is(result.status, 0);
+  t.is(result.stdout, '');
+});
+
+test('CLI: sessions rm fails when session ID is missing without --all', (t) => {
+  const result = runCli(['sessions', 'rm']);
+  t.not(result.status, 0);
+  t.true(result.stderr.includes("missing required argument 'id'"));
+});
+
+test('CLI: sessions rm fails gracefully with invalid session id', (t) => {
+  const result = runCli(['sessions', 'rm', 'invalid-id-xyz']);
+  t.not(result.status, 0);
+  t.true(result.stderr.includes('not found'));
+});

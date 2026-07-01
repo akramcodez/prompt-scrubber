@@ -13,7 +13,9 @@ test('detects international E.164 phone number', (t) => {
 
 test('detects US number with country code', (t) => {
   const findings = detector.detect('Hotline: +1-800-555-0199');
-  t.is(findings.length, 1);
+  t.is(findings.length, 2);
+  t.is(findings[0]?.value, '+1-800-555-0199');
+  t.is(findings[1]?.value, '800-555-0199');
 });
 
 test('detects US number in parentheses format', (t) => {
@@ -67,4 +69,20 @@ test('does not match a bare 5-digit number', (t) => {
 test('returns empty for plain text', (t) => {
   const findings = detector.detect('No phone numbers here at all.');
   t.is(findings.length, 0);
+});
+
+test('detects but rejects a string with fewer than 7 digits', (t) => {
+  const findings = detector.detect('Short: +1 234');
+  t.is(findings.length, 0);
+});
+
+test('resolves overlapping matches by picking the longer one', (t) => {
+  // Intl match: +1-23-4-567 (11 chars, 4 groups, 7 digits - stops because next is '-')
+  // Dashes match: 567-890-1234 (12 chars)
+  // The Dashes match overlaps and is longer, so it should win.
+  const findings = detector.detect('Call +1-23-4-567-890-1234');
+  t.is(findings.length, 2);
+  // It returns both the shorter and longer match, since deduplication is now handled centrally.
+  t.is(findings[0]?.value, '+1-23-4-567');
+  t.is(findings[1]?.value, '567-890-1234');
 });

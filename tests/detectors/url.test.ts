@@ -73,6 +73,15 @@ test('does not match a plain word', (t) => {
 });
 
 test('does not match an email as a URL', (t) => {
-  const findings = detector.detect('Contact user@example.com');
+  const findings = detector.detect('Email me at hello@test.example.com');
   t.is(findings.length, 0);
+});
+
+test('skips bare API match if it is already covered by a full URL match', (t) => {
+  // FULL_URL_REGEX matches "https://(api.example.com/v1/users)"
+  // BARE_API_REGEX will match "api.example.com/v1/users)" because it's preceded by '(' which is not a slash/word char.
+  // The bare match should be skipped because it falls within the span of the full match.
+  const findings = detector.detect('Visit https://(api.example.com/v1/users)');
+  t.is(findings.length, 1);
+  t.is(findings[0]?.value, 'https://(api.example.com/v1/users)');
 });

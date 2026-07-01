@@ -16,7 +16,7 @@ function getConfigDir(): string {
     return override;
   }
 
-  const platform = os.platform();
+  const platform = process.env.MOCK_PLATFORM || os.platform();
   const homedir = os.homedir();
 
   if (platform === 'darwin') {

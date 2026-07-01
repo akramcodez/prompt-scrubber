@@ -12,13 +12,18 @@ import { setupSessionsCommands } from './commands/sessions.js';
 // Get version from package.json
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-// Depending on whether we run from src or dist, package.json might be up 2 or 3 levels.
-// Easiest is just checking both or requiring it dynamically. Wait, standard ESM trick:
-let pkg: { version?: string };
-try {
-  pkg = JSON.parse(readFileSync(join(__dirname, '..', '..', 'package.json'), 'utf8'));
-} catch {
-  pkg = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf8'));
+export function getVersion(currentDir: string): string {
+  let pkg: { version?: string };
+  try {
+    pkg = JSON.parse(readFileSync(join(currentDir, '..', '..', 'package.json'), 'utf8'));
+  } catch {
+    try {
+      pkg = JSON.parse(readFileSync(join(currentDir, '..', 'package.json'), 'utf8'));
+    } catch {
+      pkg = {};
+    }
+  }
+  return pkg.version || '1.0.0';
 }
 
 const program = new Command();
@@ -26,11 +31,13 @@ const program = new Command();
 program
   .name('prompt-scrub')
   .description('A local-first utility to strip identifying content out of prompts')
-  .version(pkg.version || '1.0.0');
+  .version(getVersion(__dirname));
 
 setupScrubCommand(program);
 setupRehydrateCommand(program);
 setupInspectCommand(program);
 setupSessionsCommands(program);
 
-program.parse(process.argv);
+if (process.argv[1] === __filename) {
+  program.parse(process.argv);
+}
