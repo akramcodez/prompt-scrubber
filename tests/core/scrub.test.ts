@@ -65,6 +65,22 @@ test('disabledDetectors suppresses named detector', (t) => {
   t.is(result.scrubbedContent, 'Email me at test@example.com');
 });
 
+test('disabledDetectors suppresses named detector even without Detector suffix', (t) => {
+  const result = scrub({
+    content: 'Email me at test@example.com',
+    options: { disabledDetectors: ['Email'] },
+  });
+  t.is(result.scrubbedContent, 'Email me at test@example.com');
+});
+
+test('scrub works gracefully when options is empty object', (t) => {
+  const result = scrub({
+    content: 'My email is test@example.com',
+    options: {},
+  });
+  t.is(result.scrubbedContent, 'My email is Email_1');
+});
+
 test('customDetectors option adds a detector on top of defaults', (t) => {
   const customDetector = {
     name: 'CustomDetector',

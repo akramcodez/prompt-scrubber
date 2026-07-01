@@ -25,6 +25,7 @@ export function setupRehydrateCommand(program: Command) {
         } catch (err: unknown) {
           console.error(`Error reading file: ${(err as Error).message}`);
           process.exit(1);
+          return;
         }
       } else {
         // Read from stdin
@@ -33,11 +34,13 @@ export function setupRehydrateCommand(program: Command) {
         } catch {
           console.error('No input provided.');
           process.exit(1);
+          return;
         }
       }
 
       if (!input) {
         process.exit(0);
+        return;
       }
 
       const result = handleRehydrate(input, options);

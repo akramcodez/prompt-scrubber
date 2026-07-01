@@ -66,6 +66,20 @@ test('detects high-entropy base64 string in quotes', (t) => {
   t.true(findings.length >= 1);
 });
 
+test('detects high-entropy string without key-value context', (t) => {
+  const entropy = 'aB3dEf7gHi9JkLm2NoPqR5sTuV8wXyZ';
+  const findings = detector.detect(`"${entropy}"`);
+  t.is(findings.length, 1);
+  t.is(findings[0]?.value, entropy);
+});
+
+test('replaces shorter overlap with longer overlap', (t) => {
+  const longSecret = 'AIzaSyD9tSrke72I6kT0lKjT5hTjHfkHj3sxDMaB3dEf7gHi9JkLm2NoPqR5sTuV8wXyZ';
+  const findings = detector.detect(`"${longSecret}"`);
+  t.is(findings.length, 1);
+  t.is(findings[0]?.value, longSecret);
+});
+
 // --- Negative Cases ---
 
 test('does not match ordinary words', (t) => {

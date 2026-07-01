@@ -44,8 +44,27 @@ export function setupSessionsCommands(program: Command) {
   sessionsCommand
     .command('rm')
     .description('Delete a session')
-    .argument('<id>', 'Session ID to delete')
-    .action((id) => {
+    .argument('[id]', 'Session ID to delete')
+    .option('--all', 'Delete all sessions')
+    .action((id, options) => {
+      if (options.all) {
+        const sessions = listSessions();
+        if (sessions.length === 0) {
+          console.log('No sessions to remove.');
+          return;
+        }
+        for (const session of sessions) {
+          deleteSessionMap(session.id);
+        }
+        console.log(`Deleted ${sessions.length} sessions.`);
+        return;
+      }
+
+      if (!id) {
+        console.error("error: missing required argument 'id'");
+        process.exit(1);
+      }
+
       const success = deleteSessionMap(id);
       if (success) {
         console.log(`Session ${id} deleted.`);

@@ -108,3 +108,17 @@ test('save writes map to disk', (t) => {
   const map = manager.getMap();
   t.is(map.Secret_1, '123');
 });
+
+test('rebuildCategoryCounts ignores invalid placeholders and handles out-of-order indexes', (t) => {
+  const manager = new SessionManager();
+  const map = manager.getMap();
+  map.Email_2 = 'b@test.com';
+  map.Email_1 = 'a@test.com'; // out of order, triggers index < counts[category]
+  map.InvalidPlaceholder = 'invalid'; // triggers match == null
+  map['Email_'] = 'invalid2'; // triggers match == null
+
+  manager.save();
+  const resumed = new SessionManager(manager.getSessionId());
+  const next = resumed.createPlaceholder('Email', 'c@test.com');
+  t.is(next, 'Email_3');
+});
