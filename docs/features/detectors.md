@@ -33,6 +33,7 @@ export interface Detector {
 - `UrlDetector`: Detects full URLs (with allowlist support).
 - `PathDetector`: Detects absolute paths and home directories.
 - `SecretDetector`: Detects high-entropy strings, API keys, and tokens.
+- `AddressDetector`: Detects unambiguous postal addresses (e.g., street shapes).
 
 ## Priority & Collision System
 
@@ -44,6 +45,7 @@ Priority is implicitly handled by a defined order of precedence:
 3. `UrlDetector`
 4. `PathDetector`
 5. `PhoneDetector`
+6. `AddressDetector`
 
 If `SecretDetector` and `UrlDetector` match the same string (e.g., a URL with a token), `SecretDetector` wins.
 

@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { scrub } from '../../src/core/scrub.js';
+import { rehydrate } from '../../src/core/rehydrate.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -138,4 +139,18 @@ test('Message[] input: each message gets its own scrubbing within shared session
   // Same email in both messages should map to same placeholder
   t.is(messages[0]?.content, 'From Email_1');
   t.is(messages[1]?.content, 'Also from Email_1');
+});
+
+test('postal address round-tripping works correctly', (t) => {
+  const text = 'Send it to 123 Main Street or 1600 Pennsylvania Ave.';
+  const scrubbed = scrub({ content: text });
+
+  t.is(scrubbed.scrubbedContent, 'Send it to Address_2 or Address_1');
+
+  const restored = rehydrate({
+    content: scrubbed.scrubbedContent as string,
+    sessionId: scrubbed.sessionId,
+  });
+
+  t.is(restored.content, text);
 });
