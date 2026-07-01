@@ -6,6 +6,7 @@ import { PhoneDetector } from '../detectors/phone.js';
 import { UrlDetector } from '../detectors/url.js';
 import { PathDetector } from '../detectors/path.js';
 import { SecretDetector } from '../detectors/secret.js';
+import { PostalAddressDetector } from '../detectors/postal-address.js';
 
 const DEFAULT_DETECTORS: Detector[] = [
   new SecretDetector(),
@@ -13,6 +14,7 @@ const DEFAULT_DETECTORS: Detector[] = [
   new UrlDetector(),
   new PathDetector(),
   new PhoneDetector(),
+  new PostalAddressDetector(),
 ];
 
 /**
