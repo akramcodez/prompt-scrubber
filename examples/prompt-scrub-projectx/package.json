@@ -1,0 +1,23 @@
+{
+  "name": "prompt-scrub-projectx",
+  "version": "1.0.0",
+  "description": "An example rule pack for prompt-scrubber that detects custom project codenames.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [
+    "prompt-scrub",
+    "prompt-scrubber",
+    "rule-pack",
+    "detector"
+  ],
+  "author": "prompt-scrubber community",
+  "license": "MIT",
+  "peerDependencies": {
+    "prompt-scrubber": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

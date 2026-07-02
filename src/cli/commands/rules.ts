@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { getAvailableDetectors } from '../../core/detectors.js';
+import { getAvailableDetectorsAsync } from '../../core/detectors.js';
 
 export function setupRulesCommands(program: Command) {
   const rulesCmd = program
@@ -9,8 +9,8 @@ export function setupRulesCommands(program: Command) {
   rulesCmd
     .command('list')
     .description('List the active detector set, including rule pack detectors')
-    .action(() => {
-      const detectors = getAvailableDetectors();
+    .action(async () => {
+      const detectors = await getAvailableDetectorsAsync();
 
       if (detectors.length === 0) {
         console.log('No detectors found.');

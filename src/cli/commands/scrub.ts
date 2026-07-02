@@ -2,7 +2,9 @@ import type { Command } from 'commander';
 import { readFileSync } from 'node:fs';
 import { scrub } from '../../core/scrub.js';
 
-export function handleScrub(
+import { loadConfiguredRulePacks } from '../../core/rule-packs.js';
+
+export async function handleScrub(
   text: string,
   options: {
     sessionId?: string;
@@ -18,6 +20,8 @@ export function handleScrub(
     ? options.codeTellTerms.split(',').map((s) => s.trim())
     : undefined;
 
+  const { detectors: rulePackDetectors } = await loadConfiguredRulePacks();
+
   const result = scrub({
     content: text,
     ...(options.sessionId ? { sessionId: options.sessionId } : {}),
@@ -26,6 +30,7 @@ export function handleScrub(
       enabledDetectors,
       ...(options.strictName !== undefined ? { strictNameDetector: options.strictName } : {}),
       ...(codeTellTerms !== undefined ? { codeTellTerms } : {}),
+      customDetectors: rulePackDetectors,
     },
   });
 
@@ -51,7 +56,7 @@ export function setupScrubCommand(program: Command) {
       '--code-tell-terms <terms>',
       'Comma-separated list of private identifiers to detect (enables CodeTellDetector)',
     )
-    .action((file, options) => {
+    .action(async (file, options) => {
       let input = '';
 
       if (file) {
@@ -78,7 +83,7 @@ export function setupScrubCommand(program: Command) {
         return;
       }
 
-      const result = handleScrub(input, options);
+      const result = await handleScrub(input, options);
 
       // Print scrubbed content to stdout
       process.stdout.write(result.scrubbedContent as string);

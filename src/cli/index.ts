@@ -41,5 +41,8 @@ setupSessionsCommands(program);
 setupRulesCommands(program);
 
 if (process.argv[1] === __filename) {
-  program.parse(process.argv);
+  program.parseAsync(process.argv).catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
 }
