@@ -1,4 +1,4 @@
-import type { Detector, Finding } from 'prompt-scrubber';
+import type { Detector, Finding } from '@nanocollective/prompt-scrub';
 
 /**
  * This is an example of a custom rule pack for prompt-scrubber authored in TypeScript.

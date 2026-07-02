@@ -15,9 +15,10 @@
   "author": "prompt-scrubber community",
   "license": "MIT",
   "peerDependencies": {
-    "prompt-scrubber": "^1.0.0"
+    "@nanocollective/prompt-scrub": "^1.0.0"
   },
   "devDependencies": {
+    "@nanocollective/prompt-scrub": "workspace:*",
     "typescript": "^5.9.3"
   }
 }

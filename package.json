@@ -4,7 +4,8 @@
   "packageManager": "pnpm@11.0.9",
   "type": "module",
   "description": "`prompt-scrub` is a small open-source, local-first utility designed to strip identifying content out of prompts and messages before they hit any cloud LLM. It maps your sensitive data (emails, secrets, paths) to stable placeholders, allowing you to rehydrate the model's responses back to their original forms locally.",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "bin": {
     "prompt-scrub": "./dist/cli/index.js"
   },
@@ -70,6 +71,7 @@
     ]
   },
   "dependencies": {
+    "@nanocollective/prompt-scrub": "link:",
     "commander": "^15.0.0"
   },
   "pnpm": {
