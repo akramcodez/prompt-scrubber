@@ -4,6 +4,7 @@ import * as fs from 'node:fs';
 
 export interface PromptScrubConfig {
   rulePacks?: string[];
+  urlAllowlist?: string[];
 }
 
 /**
@@ -42,9 +43,11 @@ export function getConfigDir(): string {
 export function loadConfig(): PromptScrubConfig {
   const config: PromptScrubConfig = {
     rulePacks: [],
+    urlAllowlist: [],
   };
 
   const rulePacks = new Set<string>();
+  const urlAllowlist = new Set<string>();
 
   // 1. Read global config
   const globalConfigPath = path.join(getConfigDir(), 'config.json');
@@ -54,6 +57,11 @@ export function loadConfig(): PromptScrubConfig {
       if (Array.isArray(globalData?.rulePacks)) {
         for (const pack of globalData.rulePacks) {
           if (typeof pack === 'string') rulePacks.add(pack);
+        }
+      }
+      if (Array.isArray(globalData?.urlAllowlist)) {
+        for (const host of globalData.urlAllowlist) {
+          if (typeof host === 'string') urlAllowlist.add(host);
         }
       }
     } catch (e) {
@@ -72,11 +80,18 @@ export function loadConfig(): PromptScrubConfig {
           if (typeof pack === 'string') rulePacks.add(pack);
         }
       }
+      const localUrlAllowlist = localData?.['prompt-scrub']?.urlAllowlist;
+      if (Array.isArray(localUrlAllowlist)) {
+        for (const host of localUrlAllowlist) {
+          if (typeof host === 'string') urlAllowlist.add(host);
+        }
+      }
     } catch (e) {
       // Ignore local config read/parse errors
     }
   }
 
   config.rulePacks = Array.from(rulePacks);
+  config.urlAllowlist = Array.from(urlAllowlist);
   return config;
 }

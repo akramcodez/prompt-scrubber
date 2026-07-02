@@ -33,6 +33,7 @@ export interface ScrubOptions {
   enabledDetectors?: string[]; // Array of off-by-default detector names to enable
   strictNameDetector?: boolean; // Enable stricter allowlisting for the NameDetector
   codeTellTerms?: string[]; // User-enumerated private identifiers (classes, variables)
+  urlAllowlist?: string[]; // List of hostnames to pass-through in URLs
 }
 
 export interface ScrubResult {

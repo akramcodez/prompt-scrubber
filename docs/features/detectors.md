@@ -30,7 +30,7 @@ export interface Detector {
 
 - `EmailDetector`: Detects RFC 5322 shaped email addresses.
 - `PhoneDetector`: Detects international and US-shaped phone numbers.
-- `UrlDetector`: Detects full URLs (with allowlist support).
+- `UrlDetector`: Detects full URLs and bare API endpoints. Can be configured to pass-through trusted hosts via `urlAllowlist` in configuration or `--url-allowlist` in the CLI. Subdomains of allowlisted hosts are implicitly trusted.
 - `PathDetector`: Detects absolute paths and home directories.
 - `SecretDetector`: Detects high-entropy strings, API keys, and tokens.
 - `AddressDetector`: Detects unambiguous postal addresses (e.g., street shapes).
