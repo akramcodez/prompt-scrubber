@@ -85,3 +85,37 @@ test('skips bare API match if it is already covered by a full URL match', (t) =>
   t.is(findings.length, 1);
   t.is(findings[0]?.value, 'https://(api.example.com/v1/users)');
 });
+
+// --- Allowlist Cases ---
+
+test('skips full URL when host is allowlisted exactly', (t) => {
+  const allowlistDetector = new UrlDetector(['example.com']);
+  const findings = allowlistDetector.detect('Visit https://example.com/path');
+  t.is(findings.length, 0);
+});
+
+test('skips bare API URL when host is allowlisted exactly', (t) => {
+  const allowlistDetector = new UrlDetector(['api.example.com']);
+  const findings = allowlistDetector.detect('Endpoint: api.example.com/v1/predict');
+  t.is(findings.length, 0);
+});
+
+test('skips URL when host is a subdomain of an allowlisted domain', (t) => {
+  const allowlistDetector = new UrlDetector(['example.com']);
+  const findings = allowlistDetector.detect('Visit https://api.example.com/v1');
+  t.is(findings.length, 0);
+});
+
+test('detects URL when host is NOT in allowlist', (t) => {
+  const allowlistDetector = new UrlDetector(['example.com']);
+  const findings = allowlistDetector.detect('Visit https://otherdomain.com/path');
+  t.is(findings.length, 1);
+  t.is(findings[0]?.value, 'https://otherdomain.com/path');
+});
+
+test('detects URL when allowlisted domain is a substring but not a parent domain', (t) => {
+  const allowlistDetector = new UrlDetector(['example.com']);
+  const findings = allowlistDetector.detect('Visit https://myexample.com/path');
+  t.is(findings.length, 1);
+  t.is(findings[0]?.value, 'https://myexample.com/path');
+});

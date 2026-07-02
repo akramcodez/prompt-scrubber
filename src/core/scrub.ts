@@ -73,6 +73,13 @@ export function scrub(request: ScrubRequest): ScrubResult {
     activeDetectors.push(new CodeTellDetector(options.codeTellTerms));
   }
 
+  if (options?.urlAllowlist && options.urlAllowlist.length > 0) {
+    const idx = activeDetectors.findIndex((d) => d.name === 'UrlDetector');
+    if (idx !== -1) {
+      activeDetectors[idx] = new UrlDetector(options.urlAllowlist);
+    }
+  }
+
   let detectors = activeDetectors;
   if (options?.disabledDetectors) {
     const disabledSet = new Set(

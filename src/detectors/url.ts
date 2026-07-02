@@ -11,6 +11,21 @@ const BARE_API_REGEX =
 export class UrlDetector implements Detector {
   readonly name = 'UrlDetector';
 
+  constructor(private allowlist: string[] = []) {}
+
+  private isHostAllowed(urlStr: string): boolean {
+    if (this.allowlist.length === 0) return false;
+    try {
+      const parsed = new URL(urlStr.startsWith('http') ? urlStr : 'http://' + urlStr);
+      const host = parsed.hostname;
+      return this.allowlist.some(
+        (allowed) => host === allowed || host.endsWith('.' + allowed),
+      );
+    } catch {
+      return false;
+    }
+  }
+
   detect(text: string): Finding[] {
     const raw: Finding[] = [];
 
@@ -18,6 +33,8 @@ export class UrlDetector implements Detector {
     let match: RegExpExecArray | null;
     while ((match = FULL_URL_REGEX.exec(text)) !== null) {
       const value = match[0];
+      if (this.isHostAllowed(value)) continue;
+
       raw.push({
         category: 'Url',
         span: [match.index, match.index + value.length],
@@ -34,7 +51,7 @@ export class UrlDetector implements Detector {
       const alreadyCovered = raw.some(
         (existing) => start >= existing.span[0] && start < existing.span[1],
       );
-      if (!alreadyCovered) {
+      if (!alreadyCovered && !this.isHostAllowed(value)) {
         raw.push({
           category: 'Url',
           span: [start, start + value.length],

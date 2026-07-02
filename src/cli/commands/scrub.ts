@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { scrub } from '../../core/scrub.js';
 
 import { loadConfiguredRulePacks } from '../../core/rule-packs.js';
+import { loadConfig } from '../../core/config.js';
 
 export async function handleScrub(
   text: string,
@@ -12,6 +13,7 @@ export async function handleScrub(
     enable?: string;
     strictName?: boolean;
     codeTellTerms?: string;
+    urlAllowlist?: string;
   },
 ) {
   const disabledDetectors = options.disable ? options.disable.split(',').map((s) => s.trim()) : [];
@@ -19,6 +21,13 @@ export async function handleScrub(
   const codeTellTerms = options.codeTellTerms
     ? options.codeTellTerms.split(',').map((s) => s.trim())
     : undefined;
+
+  const cliUrlAllowlist = options.urlAllowlist
+    ? options.urlAllowlist.split(',').map((s) => s.trim())
+    : [];
+
+  const config = loadConfig();
+  const urlAllowlist = Array.from(new Set([...(config.urlAllowlist || []), ...cliUrlAllowlist]));
 
   const { detectors: rulePackDetectors } = await loadConfiguredRulePacks();
 
@@ -30,6 +39,7 @@ export async function handleScrub(
       enabledDetectors,
       ...(options.strictName !== undefined ? { strictNameDetector: options.strictName } : {}),
       ...(codeTellTerms !== undefined ? { codeTellTerms } : {}),
+      ...(urlAllowlist.length > 0 ? { urlAllowlist } : {}),
       customDetectors: rulePackDetectors,
     },
   });
@@ -55,6 +65,10 @@ export function setupScrubCommand(program: Command) {
     .option(
       '--code-tell-terms <terms>',
       'Comma-separated list of private identifiers to detect (enables CodeTellDetector)',
+    )
+    .option(
+      '--url-allowlist <hosts>',
+      'Comma-separated list of hostnames to pass-through in URLs (subdomains are implicitly allowed)',
     )
     .action(async (file, options) => {
       let input = '';
