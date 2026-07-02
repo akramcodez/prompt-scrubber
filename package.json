@@ -71,7 +71,6 @@
     ]
   },
   "dependencies": {
-    "@nanocollective/prompt-scrub": "link:",
     "commander": "^15.0.0"
   },
   "pnpm": {
