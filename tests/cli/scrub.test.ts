@@ -1,34 +1,34 @@
 import test from 'ava';
 import { handleScrub } from '../../src/cli/commands/scrub.js';
 
-test('handleScrub processes text and returns result', (t) => {
-  const result = handleScrub('My email is test@example.com', {});
+test('handleScrub processes text and returns result', async (t) => {
+  const result = await handleScrub('My email is test@example.com', {});
   t.is(result.scrubbedContent, 'My email is Email_1');
   t.truthy(result.sessionId);
 });
 
-test('handleScrub respects disabled detectors', (t) => {
-  const result = handleScrub('Email alice@example.com', {
+test('handleScrub respects disabled detectors', async (t) => {
+  const result = await handleScrub('Email alice@example.com', {
     sessionId: 'test-session',
     disable: 'EmailDetector',
   });
   t.is(result.scrubbedContent, 'Email alice@example.com'); // unscrubbed
 });
 
-test('handleScrub uses provided sessionId', (t) => {
-  const result = handleScrub('Email alice@example.com', { sessionId: 'test-session-2' });
+test('handleScrub uses provided sessionId', async (t) => {
+  const result = await handleScrub('Email alice@example.com', { sessionId: 'test-session-2' });
   t.is(result.sessionId, 'test-session-2');
 });
 
-test('handleScrub respects enabled detectors', (t) => {
-  const result = handleScrub('say hello to Alice.', {
+test('handleScrub respects enabled detectors', async (t) => {
+  const result = await handleScrub('say hello to Alice.', {
     enable: 'NameDetector',
   });
   t.is(result.scrubbedContent, 'say hello to Name_1.');
 });
 
-test('handleScrub respects strictName option', (t) => {
-  const result = handleScrub('Hello John.', {
+test('handleScrub respects strictName option', async (t) => {
+  const result = await handleScrub('Hello John.', {
     enable: 'NameDetector',
     strictName: true,
   });
@@ -36,8 +36,8 @@ test('handleScrub respects strictName option', (t) => {
   t.is(result.scrubbedContent, 'Hello John.');
 });
 
-test('handleScrub respects codeTellTerms', (t) => {
-  const result = handleScrub('const myVar = 1;', {
+test('handleScrub respects codeTellTerms', async (t) => {
+  const result = await handleScrub('const myVar = 1;', {
     codeTellTerms: 'myVar, otherVar',
   });
   t.is(result.scrubbedContent, 'const CodeTell_1 = 1;');

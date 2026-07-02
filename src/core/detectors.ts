@@ -15,10 +15,13 @@ const BUILT_IN_DETECTORS: DetectorMetadata[] = [
   { name: 'CodeTellDetector', source: 'built-in', defaultState: 'off' },
 ];
 
+import { loadConfiguredRulePacks } from './rule-packs.js';
+
 /**
- * Returns metadata for all available detectors.
- * Structured to allow easy integration of rule-pack (custom) detectors in the future.
+ * Asynchronously loads configured rule-packs and returns the combined
+ * metadata of both built-in detectors and rule-pack detectors.
  */
-export function getAvailableDetectors(): DetectorMetadata[] {
-  return [...BUILT_IN_DETECTORS];
+export async function getAvailableDetectorsAsync(): Promise<DetectorMetadata[]> {
+  const { metadata } = await loadConfiguredRulePacks();
+  return [...BUILT_IN_DETECTORS, ...metadata];
 }

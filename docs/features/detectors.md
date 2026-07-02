@@ -65,9 +65,29 @@ By default, the core scrub function runs the built-in detectors in priority orde
 - **Strict Mode**: Pass `strictNameDetector: true` (or `--strict-name` via CLI) to reduce false positives for the `NameDetector`.
 - **Code Tell**: Pass `codeTellTerms` (or `--code-tell-terms` via CLI) as an array of identifiers to enable and configure the `CodeTellDetector`.
 
-### Custom Detectors
+### Custom Detectors (Programmatic)
 
 Custom detectors can be passed in during the execution of the library by providing them in the `customDetectors` array in the `ScrubOptions` (see `src/types/index.ts`). This effectively overrides or appends to the default list.
+
+### Rule Packs (External Plugins)
+
+prompt-scrubber supports distributing rule packs as standalone npm packages. A rule pack is just a normal npm package that exports an array of `Detector` objects. 
+
+To use a rule pack:
+1. Install it via npm: `npm install some-rule-pack`
+2. Declare it in your configuration. You can do this by adding a `prompt-scrub.rulePacks` array to your local `package.json`, or globally in `~/.config/prompt-scrub/config.json`.
+
+```json
+{
+  "prompt-scrub": {
+    "rulePacks": ["some-rule-pack"]
+  }
+}
+```
+
+Once declared, the CLI will automatically discover, load, and merge these detectors into the active set on startup. They participate natively in collision resolution and can be inspected via `prompt-scrub rules list`.
+
+For a guide on how to author your own rule pack, see [Authoring Rule Packs](./authoring-rule-packs.md).
 
 ## CLI Rules Command
 

@@ -3,35 +3,7 @@ import * as path from 'node:path';
 import * as fs from 'node:fs';
 import type { SessionMap } from '../types/index.js';
 
-/**
- * Determines the base configuration directory based on the OS.
- *
- * An explicit override via the `PROMPT_SCRUB_CONFIG_DIR` environment variable
- * always takes precedence. This is primarily intended for tests, but it also
- * lets users relocate the storage directory on any platform.
- */
-function getConfigDir(): string {
-  const override = process.env.PROMPT_SCRUB_CONFIG_DIR;
-  if (override && override.length > 0) {
-    return override;
-  }
-
-  const platform = process.env.MOCK_PLATFORM || os.platform();
-  const homedir = os.homedir();
-
-  if (platform === 'darwin') {
-    return path.join(homedir, 'Library', 'Application Support', 'prompt-scrub');
-  } else if (platform === 'win32') {
-    return path.join(
-      process.env.APPDATA || path.join(homedir, 'AppData', 'Roaming'),
-      'prompt-scrub',
-    );
-  } else {
-    // Linux and others
-    return path.join(process.env.XDG_CONFIG_HOME || path.join(homedir, '.config'), 'prompt-scrub');
-  }
-}
-
+import { getConfigDir } from '../core/config.js';
 /**
  * Gets the file path for a specific session ID.
  */
