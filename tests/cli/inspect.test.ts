@@ -35,11 +35,11 @@ test('computeHash yields different hashes for different scrubbed outputs', async
   const text1 = 'My email is test@example.com';
   const findings1 = await handleInspect(text1, {});
   const hash1 = computeHash(text1, findings1);
-  
+
   const text2 = 'Your email is other@example.com';
   const findings2 = await handleInspect(text2, {});
   const hash2 = computeHash(text2, findings2);
-  
+
   t.not(hash1, hash2);
 });
 

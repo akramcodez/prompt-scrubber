@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@nanocollective/prompt-scrub':
-        specifier: 'link:'
-        version: 'link:'
       commander:
         specifier: ^15.0.0
         version: 15.0.0

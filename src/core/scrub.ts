@@ -85,7 +85,7 @@ export function getActiveDetectors(options?: ScrubRequest['options']): Detector[
   if (options?.customDetectors) {
     detectors.push(...options.customDetectors);
   }
-  
+
   return detectors;
 }
 

@@ -3,7 +3,10 @@ import { readSessionMap } from '../session/storage.js';
 
 const PLACEHOLDER_REGEX = /\b([A-Za-z]+_\d+)\b/g;
 
-function rehydrateString(content: string, sessionMap: Record<string, string>): { content: string; warnings: string[] } {
+function rehydrateString(
+  content: string,
+  sessionMap: Record<string, string>,
+): { content: string; warnings: string[] } {
   // Collect all unique placeholder tokens found in the content
   const foundTokens = new Set<string>();
   let match: RegExpExecArray | null;
@@ -56,7 +59,10 @@ export function rehydrate(request: RehydrateRequest): RehydrateResult {
     // Array of messages
     const warnings: string[] = [];
     const result = content.map((msg) => {
-      const { content: rehydratedStr, warnings: msgWarnings } = rehydrateString(msg.content, sessionMap);
+      const { content: rehydratedStr, warnings: msgWarnings } = rehydrateString(
+        msg.content,
+        sessionMap,
+      );
       warnings.push(...msgWarnings);
       return { ...msg, content: rehydratedStr };
     });

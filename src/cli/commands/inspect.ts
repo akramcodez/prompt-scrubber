@@ -52,12 +52,15 @@ export function computeHash(text: string, findings: Finding[]): string {
   // Use a dummy session to simulate exactly what scrub does (right-to-left replacement)
   const session = new SessionManager();
   let scrubbedContent = text;
-  
+
   for (const finding of [...findings].reverse()) {
     const placeholder = session.createPlaceholder(finding.placeholderPrefix, finding.value);
-    scrubbedContent = scrubbedContent.slice(0, finding.span[0]) + placeholder + scrubbedContent.slice(finding.span[1]);
+    scrubbedContent =
+      scrubbedContent.slice(0, finding.span[0]) +
+      placeholder +
+      scrubbedContent.slice(finding.span[1]);
   }
-  
+
   return crypto.createHash('sha256').update(scrubbedContent).digest('hex');
 }
 

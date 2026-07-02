@@ -114,9 +114,9 @@ test('Message[] input is rehydrated and structure is preserved', (t) => {
     { role: 'user', content: 'My email is Email_1' },
     { role: 'assistant', content: 'I will not leak Secret_1.' },
   ];
-  
+
   const result = rehydrate({ content: messages, sessionId });
-  
+
   t.true(Array.isArray(result.content));
   if (Array.isArray(result.content)) {
     t.is(result.content.length, 3);
@@ -138,15 +138,15 @@ test('Message[] with hallucinated placeholders aggregates warnings', (t) => {
     { role: 'user', content: 'Contact Email_1 or Phone_99' },
     { role: 'assistant', content: 'I also see Secret_99' },
   ];
-  
+
   const result = rehydrate({ content: messages, sessionId });
-  
+
   t.true(Array.isArray(result.content));
   if (Array.isArray(result.content)) {
     t.is(result.content[0]!.content, 'Contact alice@example.com or Phone_99');
     t.is(result.content[1]!.content, 'I also see Secret_99');
   }
-  
+
   t.truthy(result.warnings);
   t.is(result.warnings?.length, 2);
   t.regex(result.warnings![0]!, /Phone_99/);
@@ -158,13 +158,13 @@ import { scrub } from '../../src/core/scrub.js';
 test('round-trip: scrub(Message[]) -> rehydrate(Message[]) restores originals', (t) => {
   const originalMessages = [
     { role: 'user', content: 'My email is user@example.com' },
-    { role: 'assistant', content: 'I have logged user@example.com into the system.' }
+    { role: 'assistant', content: 'I have logged user@example.com into the system.' },
   ];
-  
+
   // 1. Scrub
   const scrubResult = scrub({ content: originalMessages, sessionId: 'rh-round-trip' });
   t.true(Array.isArray(scrubResult.scrubbedContent));
-  
+
   // 2. Assert scrubbed content has placeholders
   if (Array.isArray(scrubResult.scrubbedContent)) {
     t.regex(scrubResult.scrubbedContent[0]!.content, /Email_1/);
@@ -172,11 +172,11 @@ test('round-trip: scrub(Message[]) -> rehydrate(Message[]) restores originals', 
   }
 
   // 3. Rehydrate
-  const rehydrateResult = rehydrate({ 
-    content: scrubResult.scrubbedContent, 
-    sessionId: scrubResult.sessionId 
+  const rehydrateResult = rehydrate({
+    content: scrubResult.scrubbedContent,
+    sessionId: scrubResult.sessionId,
   });
-  
+
   // 4. Assert structure and content is fully restored
   t.true(Array.isArray(rehydrateResult.content));
   if (Array.isArray(rehydrateResult.content)) {

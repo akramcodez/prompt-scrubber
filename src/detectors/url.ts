@@ -18,9 +18,7 @@ export class UrlDetector implements Detector {
     try {
       const parsed = new URL(urlStr.startsWith('http') ? urlStr : 'http://' + urlStr);
       const host = parsed.hostname;
-      return this.allowlist.some(
-        (allowed) => host === allowed || host.endsWith('.' + allowed),
-      );
+      return this.allowlist.some((allowed) => host === allowed || host.endsWith('.' + allowed));
     } catch {
       return false;
     }

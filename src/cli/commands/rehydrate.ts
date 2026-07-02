@@ -46,7 +46,10 @@ export function setupRehydrateCommand(program: Command) {
       const result = handleRehydrate(input, options);
 
       // Print rehydrated content to stdout
-      const outStr = typeof result.content === 'string' ? result.content : JSON.stringify(result.content, null, 2);
+      const outStr =
+        typeof result.content === 'string'
+          ? result.content
+          : JSON.stringify(result.content, null, 2);
       process.stdout.write(outStr);
 
       // Print any warnings to stderr
