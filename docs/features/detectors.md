@@ -6,7 +6,7 @@ sidebar_order: 1
 
 # Detector System
 
-The detector system is responsible for scanning input text, identifying sensitive information, and proposing replacements (placeholders).
+The detector system is responsible for scanning input text, identifying sensitive information, and proposing placeholder prefixes (from which exact placeholders are later derived).
 
 ## Architecture
 
@@ -25,6 +25,11 @@ export interface Detector {
   detect(text: string): Finding[];
 }
 ```
+
+> **Note on the `Finding` Interface:** 
+> The original whitepaper conceptualizes detectors as returning `{ category, span, replacement }`. However, the exact placeholder (e.g., `Email_2` instead of `Email_1`) cannot be known at detect time because it depends on the state of the active `SessionManager`. 
+> 
+> To keep detectors as pure functions, the `replacement` computation is deferred to the core pipeline. Detectors instead return the matched `value` and a `placeholderPrefix`, which the session manager uses to generate the final replacement string.
 
 ## Built-in Detectors
 

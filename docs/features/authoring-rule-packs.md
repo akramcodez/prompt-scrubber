@@ -35,6 +35,9 @@ export interface Detector {
 }
 ```
 
+> **Note to Whitepaper Readers:** 
+> The original whitepaper conceptually defines a `Finding` as `{ category, span, replacement }`. The canonical runtime interface explicitly omits `replacement` because the exact placeholder (e.g. `Email_2`) requires session state, which detectors do not have. Rule-pack authors must return `value` and `placeholderPrefix`, allowing the core engine to deterministically generate the final replacement.
+
 ## Example: Building a Minimal Rule Pack
 
 Let's build a rule pack that detects "Project X" codenames.
