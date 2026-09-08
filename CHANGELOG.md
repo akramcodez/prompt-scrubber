@@ -1,5 +1,32 @@
 # @nanocollective/prompt-scrub
 
+# 1.1.0
+
+- feat: implement session TTL and auto-expiry cleanup
+- Add a `watch` command for real-time clipboard/file monitoring with auto-scrubbing (`--clipboard`, `--file <files...>`, plus `--dry-run`, `--backup`, `--interval`, `--once`, `--session-id`, `--disable`/`--enable`, `--url-allowlist`; cross-platform Win/macOS/Linux, clean `Ctrl-C` exit, install hints for missing `xclip`/`notify-send`/`osascript`); a one-line `scrub` summary printed to stderr with a `-q`/`--quiet` flag for pipelines, also exposed to library callers as `result.stats` (`totalEntities`, `byCategory`); and `init` + `config show` commands to scaffold and inspect the global config. Fix: cross-platform build script (`rm -rf` → Node `fs.rmSync`); phone-detector span start index; common-name detection in strict mode; watch-mode review feedback. Thanks to @addyCooks and @prashantbhudwal.
+
+- chore: address baseline CI findings (semgrep + adjacent hardening)
+
+The shared Nano-Collective/.github pr-checks workflow now runs
+`semgrep scan --config auto --error` against the whole repo, which
+exposes pre-existing baseline issues that the previous workflow
+configuration tolerated:
+
+- `src/detectors/code-tell.ts`: drop the `new RegExp(...)` built
+  from user input in favour of a single-pass character scan with
+  per-term length and term-count caps. Word-boundary semantics and
+  the longest-match preference are preserved; all existing detector
+  tests still pass. The constructor now exposes a `getDiagnostics()`
+  API that reports any terms dropped because they exceeded the caps.
+
+- `pnpm-workspace.yaml`: add the three supply-chain hardening
+  settings (`blockExoticSubdeps`, `minimumReleaseAge`,
+  `trustPolicy`) at the top level, per the current pnpm schema.
+
+- `.github/dependabot.yml`: add a 7-day cooldown to both ecosystem
+  blocks so freshly published packages get a settling period
+  before being proposed.
+
 # 1.0.2
 
 Patch release — dev-dependency and CI maintenance only. No public-API or runtime changes.
